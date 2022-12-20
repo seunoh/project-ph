@@ -1,12 +1,12 @@
 from passlib.hash import bcrypt
 from sqlalchemy.orm import Session
 
-from models import models
-from schemas import schemas
+from models.user import User
+from schemas import schema_user
 
 
 def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+    return db.query(User).filter(User.email == email).first()
 
 
 def get_user_by(db: Session, email: str, password: str):
@@ -18,9 +18,9 @@ def get_user_by(db: Session, email: str, password: str):
         return db_user
 
 
-def create_user(db: Session, user: schemas.UserCreate):
+def create_user(db: Session, user: schema_user.UserCreate):
     hashed_password = bcrypt.hash(user.password)
-    db_user = models.User(email=user.email, hashed_password=hashed_password)
+    db_user = User(email=user.email, hashed_password=hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
