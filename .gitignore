@@ -255,5 +255,15 @@ cython_debug/
 # Poetry local configuration file - https://python-poetry.org/docs/configuration/#local-configuration
 poetry.toml
 
+### VirtualEnv ###
+# Virtualenv
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+#[Ss]cripts
+pyvenv.cfg
+pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,intellij+all
