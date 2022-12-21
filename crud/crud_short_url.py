@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from models.short_url import ShortUrl
 
 
-def get(db: Session, url: str):
+def get_by_url(db: Session, url: str):
     return db.query(ShortUrl).filter(ShortUrl.short_url == url).first()
 
 

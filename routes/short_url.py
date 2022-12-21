@@ -28,7 +28,7 @@ async def short(short_url: str, db: Session = Depends(get_db)):
     (단축 URL은 특정 시간 뒤에 만료되어야 합니다.)
     :return:
     """
-    db_obj = crud_short_url.get(db, short_url)
+    db_obj = crud_short_url.get_by_url(db, short_url)
     if not db_obj:
         raise HTTPException(status_code=404, detail="해당 페이지를 찾을 수 없습니다.")
     return RedirectResponse(url=db_obj.original_url)
