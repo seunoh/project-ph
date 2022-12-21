@@ -1,4 +1,4 @@
-from passlib.hash import bcrypt
+import bcrypt
 from sqlalchemy.orm import Session
 
 from app.models.user import User, Token
@@ -10,7 +10,7 @@ def get_user_by_email(db: Session, email: str):
 
 
 def create_user(db: Session, user: UserCreate):
-    hashed_password = bcrypt.hash(user.password)
+    hashed_password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     db_user = User(email=user.email, hashed_password=hashed_password)
     db.add(db_user)
     db.commit()

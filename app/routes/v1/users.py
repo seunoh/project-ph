@@ -1,5 +1,5 @@
+import bcrypt
 from fastapi import APIRouter, Depends, HTTPException, status
-from passlib.hash import bcrypt
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db, get_current_user, get_current_token
@@ -41,7 +41,7 @@ def login(payload: UserCreate, db: Session = Depends(get_db)):
     if not db_user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="이메일 또는 비밀번호가 잘못 입력 되었습니다.")
 
-    if bcrypt.verify(payload.password, db_user.hashed_password):
+    if bcrypt.checkpw(payload.password.encode('UTF-8'), db_user.hashed_password.encode('utf-8')):
         new_token = create_token(email=db_user.email, is_refresh=False)
         refresh_token = create_token(email=db_user.email, is_refresh=True)
         db_token = crud_user.create_token(db=db, token=new_token, refresh_token=refresh_token, user_id=db_user.id)
