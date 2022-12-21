@@ -3,18 +3,18 @@ import datetime
 from sqlalchemy.orm import Session
 
 from models.account import AccountBook
-from schemas import schema_account_book
+from schemas import AccountBookCreate, AccountBookUpdate
 
 
-def get(db: Session, data_id: int, user_id: int):
-    return db.query(AccountBook).filter(AccountBook.id == data_id and AccountBook.user_id == user_id).first()
+def get(db: Session, data_id: int):
+    return db.query(AccountBook).filter(AccountBook.id == data_id).first()
 
 
 def get_list_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 10):
     return db.query(AccountBook).filter(AccountBook.user_id == user_id).offset(skip).limit(limit).all()
 
 
-def update(db: Session, data_id: int, target: schema_account_book.AccountBookUpdate, user_id: int):
+def update(db: Session, data_id: int, target: AccountBookUpdate, user_id: int):
     obj_data = db.query(AccountBook).filter(AccountBook.id == data_id and AccountBook.user_id == user_id).first()
     if not obj_data:
         return None
@@ -50,7 +50,7 @@ def copy(db: Session, data_id: int, user_id):
     return db_obj
 
 
-def create_with_user(db: Session, data: schema_account_book.AccountBookCreate, user_id: int):
+def create_with_user(db: Session, data: AccountBookCreate, user_id: int):
     date = datetime.datetime.now()
     db_obj = AccountBook(amount=data.amount, description=data.description, date=date, user_id=user_id)
     db.add(db_obj)
