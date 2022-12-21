@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, Text, Float, DateTime, ForeignKey, func
 
 from app.db import database
 
@@ -11,3 +11,4 @@ class AccountBook(database.Base):
     description = Column(Text, nullable=True)
     date = Column(DateTime)
     user_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime(timezone=True), default=func.now())

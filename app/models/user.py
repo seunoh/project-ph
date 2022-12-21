@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, func
 
 from app.db import database
 
@@ -9,6 +9,7 @@ class User(database.Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(255), unique=True, index=True)
     hashed_password = Column(String(255))
+    created_at = Column(DateTime(timezone=True), default=func.now())
 
 
 class Token(database.Base):
@@ -18,3 +19,4 @@ class Token(database.Base):
     token = Column(Text)
     refresh_token = Column(Text)
     user_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime(timezone=True), default=func.now())

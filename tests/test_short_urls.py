@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -88,3 +90,29 @@ def test_short_url(setup_authorization):
     assert response.status_code == 200
     data = response.json()
     assert data['amount'] == input_data['amount']
+
+
+def test_short_url_expire(setup_authorization):
+    input_data = {"amount": 100,
+                  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis."}
+    response = client.post(
+        "/v1/account-books",
+        headers={"Authorization": f"Bearer {setup_authorization}"},
+        json=input_data,
+    )
+
+    assert response.status_code == 201
+    data = response.json()
+    assert 'id' in data
+
+    response = client.post(
+        "/short",
+        headers={"Authorization": f"Bearer {setup_authorization}"},
+        json={"url": f"{client.base_url}/v1/account-books/{data['id']}"}
+    )
+
+    assert response.status_code == 201
+    data = response.json()
+    assert 'expire' in data
+    expire = datetime.strptime(data['expire'], '%Y-%m-%dT%H:%M:%S')
+    assert expire >= datetime.utcnow(), data

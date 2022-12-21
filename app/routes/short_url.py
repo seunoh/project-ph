@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, Request, HTTPException, status
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse
@@ -22,7 +24,11 @@ async def create(payload: ShortUrlCreate,
     base_url = request.base_url
 
     db_obj = crud_short_url.create_short_url(db=db, original_url=url, base_url=str(base_url))
-    return {'original_url': db_obj.original_url, 'short_url': db_obj.short_url}
+    return {
+        'original_url': db_obj.original_url,
+        'short_url': db_obj.short_url,
+        'expire': db_obj.expire.strftime("%Y-%m-%dT%H:%M:%S")
+    }
 
 
 @router.get('/{short_url}')
@@ -37,4 +43,8 @@ async def short(short_url: str,
     db_obj = crud_short_url.get_by_url(db=db, short_url=f"{request.base_url}{short_url}")
     if not db_obj:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="잘못된 데이터를 입력하였습니다.")
-    return RedirectResponse(status_code=status.HTTP_301_MOVED_PERMANENTLY, url=db_obj.original_url)
+
+    if db_obj.expire >= datetime.utcnow():
+        return RedirectResponse(status_code=status.HTTP_301_MOVED_PERMANENTLY, url=db_obj.original_url)
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="유효시간리 만료 되었습니다.")
