@@ -2,8 +2,8 @@ import datetime
 
 from sqlalchemy.orm import Session
 
-from models.account import AccountBook
-from schemas import AccountBookCreate, AccountBookUpdate
+from app.models.account import AccountBook
+from app.schemas import AccountBookCreate, AccountBookUpdate
 
 
 def get(db: Session, data_id: int):

@@ -1,7 +1,7 @@
 import nanoid
 from sqlalchemy.orm import Session
 
-from models.short_url import ShortUrl
+from app.models.short_url import ShortUrl
 
 
 def get_by_url(db: Session, short_url: str):

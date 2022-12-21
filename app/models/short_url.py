@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, DateTime, Text
 from sqlalchemy.sql import func
-from db import database
+from app.db import database
 
 
 class ShortUrl(database.Base):

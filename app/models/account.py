@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Text, Float, DateTime, ForeignKey
 
-from db import database
+from app.db import database
 
 
 class AccountBook(database.Base):

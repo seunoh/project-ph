@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from core.dependencies import get_db, get_current_user
-from crud import crud_account_book
-from models.user import User
-from schemas import AccountBookCreate, AccountBookUpdate
+from app.core.dependencies import get_db, get_current_user
+from app.crud import crud_account_book
+from app.models.user import User
+from app.schemas import AccountBookCreate, AccountBookUpdate
 
 router = APIRouter()
 

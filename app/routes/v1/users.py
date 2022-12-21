@@ -2,12 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from passlib.hash import bcrypt
 from sqlalchemy.orm import Session
 
-from core.dependencies import get_db, get_current_user, get_current_token
-from core.jwt_helper import create_token, validate_token
-from crud import crud_user
-from models.user import User
-from schemas import TokenCreate
-from schemas import UserCreate
+from app.core.dependencies import get_db, get_current_user, get_current_token
+from app.core.jwt_helper import create_token, validate_token
+from app.crud import crud_user
+from app.models.user import User
+from app.schemas import TokenCreate, UserCreate
 
 router = APIRouter()
 

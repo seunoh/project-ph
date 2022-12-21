@@ -1,8 +1,8 @@
 from passlib.hash import bcrypt
 from sqlalchemy.orm import Session
 
-from models.user import User, Token
-from schemas import UserCreate
+from app.models.user import User, Token
+from app.schemas import UserCreate
 
 
 def get_user_by_email(db: Session, email: str):

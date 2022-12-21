@@ -2,9 +2,9 @@ import jwt
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
-from core.jwt_helper import validate_token
-from crud import crud_user
-from db.database import SessionLocal
+from app.core.jwt_helper import validate_token
+from app.crud import crud_user
+from app.db.database import SessionLocal
 
 
 def get_db():

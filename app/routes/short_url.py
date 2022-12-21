@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, Request, HTTPException, status
 from sqlalchemy.orm import Session
 from starlette.responses import RedirectResponse
 
-from core.dependencies import get_db
-from crud import crud_short_url
-from schemas import ShortUrlCreate
+from app.core.dependencies import get_db
+from app.crud import crud_short_url
+from app.schemas import ShortUrlCreate
 
 router = APIRouter()
 
