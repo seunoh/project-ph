@@ -57,28 +57,30 @@ def setup_authorization(setup_db):
     assert response.status_code == 200
 
 
-app.dependency_overrides[get_db] = override_get_db
-
-client = TestClient(app)
-
-
-def test_short_url(setup_authorization):
-    input_data = {"amount": 100,
-                  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis."}
+@pytest.fixture()
+def setup_account_book(setup_authorization):
     response = client.post(
         "/v1/account-books",
         headers={"Authorization": f"Bearer {setup_authorization}"},
-        json=input_data,
+        json=input_data(),
     )
 
     assert response.status_code == 201
     data = response.json()
     assert 'id' in data
+    yield data
 
+
+app.dependency_overrides[get_db] = override_get_db
+
+client = TestClient(app)
+
+
+def test_short_url(setup_account_book):
     response = client.post(
         "/short",
         headers={"Authorization": f"Bearer {setup_authorization}"},
-        json={"url": f"{client.base_url}/v1/account-books/{data['id']}"}
+        json={"url": f"{client.base_url}/v1/account-books/{setup_account_book['id']}"}
     )
 
     assert response.status_code == 201
@@ -89,26 +91,14 @@ def test_short_url(setup_authorization):
 
     assert response.status_code == 200
     data = response.json()
-    assert data['amount'] == input_data['amount']
+    assert data['amount'] == input_data()['amount']
 
 
-def test_short_url_expire(setup_authorization):
-    input_data = {"amount": 100,
-                  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis."}
-    response = client.post(
-        "/v1/account-books",
-        headers={"Authorization": f"Bearer {setup_authorization}"},
-        json=input_data,
-    )
-
-    assert response.status_code == 201
-    data = response.json()
-    assert 'id' in data
-
+def test_short_url_expire(setup_account_book):
     response = client.post(
         "/short",
         headers={"Authorization": f"Bearer {setup_authorization}"},
-        json={"url": f"{client.base_url}/v1/account-books/{data['id']}"}
+        json={"url": f"{client.base_url}/v1/account-books/{setup_account_book['id']}"}
     )
 
     assert response.status_code == 201
@@ -116,3 +106,11 @@ def test_short_url_expire(setup_authorization):
     assert 'expire' in data
     expire = datetime.strptime(data['expire'], '%Y-%m-%dT%H:%M:%S')
     assert expire >= datetime.utcnow(), data
+
+
+def input_data():
+    return {
+        "amount": 100,
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis.",
+        "date": datetime.utcnow().date().strftime('%Y-%m-%d')
+    }

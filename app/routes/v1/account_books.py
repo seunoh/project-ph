@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_db, get_current_user
@@ -18,7 +18,14 @@ async def create(payload: AccountBookCreate,
     :return:
     """
     db_obj = crud_account_book.create_with_user(db=db, data=payload, user_id=current_user.id)
-    return db_obj
+    return {
+        "id": db_obj.id,
+        "amount": db_obj.amount,
+        "description": db_obj.description,
+        "date": db_obj.date,
+        "updated_at": db_obj.updated_at,
+        "created_at": db_obj.created_at
+    }
 
 
 @router.put('/{item_id}')
@@ -31,7 +38,16 @@ async def update(item_id: int,
     :return:
     """
     db_obj = crud_account_book.update(db=db, data_id=item_id, target=payload, user_id=current_user.id)
-    return db_obj
+    if not db_obj:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='해당 내역을 찾을 수 없습니다.')
+    return {
+        "id": db_obj.id,
+        "amount": db_obj.amount,
+        "description": db_obj.description,
+        "date": db_obj.date,
+        "updated_at": db_obj.updated_at,
+        "created_at": db_obj.created_at
+    }
 
 
 @router.delete('/{item_id}')
@@ -43,7 +59,11 @@ async def delete(item_id: int,
     :return:
     """
     db_obj = crud_account_book.delete(db=db, data_id=item_id, user_id=current_user.id)
-    return db_obj
+    if not db_obj:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='해당 내역을 찾을 수 없습니다.')
+    return {
+        "message": "success"
+    }
 
 
 @router.get('/')
@@ -53,8 +73,15 @@ async def read_all(db: Session = Depends(get_db),
     가계부에서 이제까지 기록한 가계부 리스트를 볼 수 있습니다.
     :return:
     """
-    db_obj = crud_account_book.get_list_by_user(db=db, user_id=current_user.id)
-    return db_obj
+    db_objs = crud_account_book.get_list_by_user(db=db, user_id=current_user.id)
+    return [{
+        "id": db_obj.id,
+        "amount": db_obj.amount,
+        "description": db_obj.description,
+        "date": db_obj.date,
+        "updated_at": db_obj.updated_at,
+        "created_at": db_obj.created_at
+    } for db_obj in db_objs]
 
 
 @router.get('/{item_id}')
@@ -65,7 +92,16 @@ async def read(item_id: int,
     :return:
     """
     db_obj = crud_account_book.get(db=db, data_id=item_id)
-    return db_obj
+    if not db_obj:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='해당 내역을 찾을 수 없습니다.')
+    return {
+        "id": db_obj.id,
+        "amount": db_obj.amount,
+        "description": db_obj.description,
+        "date": db_obj.date,
+        "updated_at": db_obj.updated_at,
+        "created_at": db_obj.created_at
+    }
 
 
 @router.post('/{item_id}/copy', status_code=status.HTTP_201_CREATED)
@@ -77,4 +113,11 @@ async def copy(item_id: int,
     :return:
     """
     db_obj = crud_account_book.copy(db=db, data_id=item_id, user_id=current_user.id)
-    return db_obj
+    return {
+        "id": db_obj.id,
+        "amount": db_obj.amount,
+        "description": db_obj.description,
+        "date": db_obj.date,
+        "updated_at": db_obj.updated_at,
+        "created_at": db_obj.created_at
+    }

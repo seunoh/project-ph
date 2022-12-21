@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -64,7 +66,7 @@ def test_create_account_books(setup_authorization):
     response = client.post(
         "/v1/account-books",
         headers={"Authorization": f"Bearer {setup_authorization}"},
-        json={"amount": 100, "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis."},
+        json=input_data(),
     )
 
     assert response.status_code == 201
@@ -76,7 +78,7 @@ def test_update_account_books(setup_authorization):
     response = client.post(
         "/v1/account-books",
         headers={"Authorization": f"Bearer {setup_authorization}"},
-        json={"amount": 100, "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis."},
+        json=input_data(),
     )
 
     assert response.status_code == 201
@@ -98,7 +100,7 @@ def test_delete_account_books(setup_authorization):
     response = client.post(
         "/v1/account-books",
         headers={"Authorization": f"Bearer {setup_authorization}"},
-        json={"amount": 100, "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis."},
+        json=input_data(),
     )
 
     assert response.status_code == 201
@@ -128,7 +130,7 @@ def test_get_account_books(setup_authorization):
     response = client.post(
         "/v1/account-books",
         headers={"Authorization": f"Bearer {setup_authorization}"},
-        json={"amount": 100, "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis."},
+        json=input_data(),
     )
 
     assert response.status_code == 201
@@ -149,7 +151,7 @@ def test_copy_account_books(setup_authorization):
     response = client.post(
         "/v1/account-books",
         headers={"Authorization": f"Bearer {setup_authorization}"},
-        json={"amount": 100, "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis."},
+        json=input_data(),
     )
 
     assert response.status_code == 201
@@ -164,3 +166,11 @@ def test_copy_account_books(setup_authorization):
     assert new_response.status_code == 201
     new_data = new_response.json()
     assert data['amount'] == new_data['amount']
+
+
+def input_data():
+    return {
+        "amount": 100,
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis.",
+        "date": datetime.utcnow().date().strftime('%Y-%m-%d')
+    }

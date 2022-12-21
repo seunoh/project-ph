@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, Float, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, Text, Float, DateTime, ForeignKey, func, Date
 
 from app.db import database
 
@@ -9,6 +9,7 @@ class AccountBook(database.Base):
     id = Column(Integer, primary_key=True, index=True)
     amount = Column(Float, default=0.0)
     description = Column(Text, nullable=True)
-    date = Column(DateTime)
+    date = Column(Date)
     user_id = Column(Integer, ForeignKey("users.id"))
+    updated_at = Column(DateTime(timezone=True), default=func.now(), onupdate=func.now())
     created_at = Column(DateTime(timezone=True), default=func.now())

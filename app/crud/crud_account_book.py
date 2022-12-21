@@ -1,8 +1,8 @@
-import datetime
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from app.models.account import AccountBook
+from app.models.account_book import AccountBook
 from app.schemas import AccountBookCreate, AccountBookUpdate
 
 
@@ -10,8 +10,8 @@ def get(db: Session, data_id: int):
     return db.query(AccountBook).filter(AccountBook.id == data_id).first()
 
 
-def get_list_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 10):
-    return db.query(AccountBook).filter(AccountBook.user_id == user_id).offset(skip).limit(limit).all()
+def get_list_by_user(db: Session, user_id: int):
+    return db.query(AccountBook).filter(AccountBook.user_id == user_id).all()
 
 
 def update(db: Session, data_id: int, target: AccountBookUpdate, user_id: int):
@@ -51,8 +51,8 @@ def copy(db: Session, data_id: int, user_id):
 
 
 def create_with_user(db: Session, data: AccountBookCreate, user_id: int):
-    date = datetime.datetime.now()
-    db_obj = AccountBook(amount=data.amount, description=data.description, date=date, user_id=user_id)
+    _date = datetime.strptime(data.date, '%Y-%m-%d').date()
+    db_obj = AccountBook(amount=data.amount, description=data.description, date=_date, user_id=user_id)
     db.add(db_obj)
     db.commit()
     db.refresh(db_obj)

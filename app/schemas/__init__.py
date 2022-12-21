@@ -11,6 +11,7 @@ class UserCreate(BaseModel):
 class AccountBookCreate(BaseModel):
     amount: float
     description: str
+    date: str
 
 
 class AccountBookUpdate(BaseModel):
