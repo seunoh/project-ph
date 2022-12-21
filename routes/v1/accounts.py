@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 
 from core.dependencies import get_db, get_current_user
@@ -75,13 +75,3 @@ async def copy(item_id: int, db: Session = Depends(get_db), current_user: User =
     """
     db_obj = crud_account_book.copy(db, item_id, user_id=current_user.id)
     return db_obj
-
-
-@router.post('/{item_id}/share')
-async def share():
-    """
-    가계부의 특정 세부 내역을 공유할 수 있게 단축 URL을 만들 수 있습니다.
-    (단축 URL은 특정 시간 뒤에 만료되어야 합니다.)
-    :return:
-    """
-    return ''

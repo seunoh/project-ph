@@ -50,10 +50,6 @@ def copy(db: Session, data_id: int, user_id):
     return db_obj
 
 
-def share(db: Session, data_id: int):
-    pass
-
-
 def create_with_user(db: Session, data: schema_account_book.AccountBookCreate, user_id: int):
     date = datetime.datetime.now()
     db_obj = AccountBook(amount=data.amount, description=data.description, date=date, user_id=user_id)
