@@ -18,8 +18,8 @@ def create_user(db: Session, user: schema_user.UserCreate):
     return db_user
 
 
-def create_token(db: Session, token: str, user_id: int):
-    db_obj = Token(token=token, user_id=user_id)
+def create_token(db: Session, token: str, refresh_token: str, user_id: int):
+    db_obj = Token(token=token, refresh_token=refresh_token, user_id=user_id)
     db.add(db_obj)
     db.commit()
     db.refresh(db_obj)
@@ -31,8 +31,21 @@ def get_token(db: Session, token: str, user_id: int):
     return obj
 
 
+def get_token_by_refresh(db: Session, refresh_token: str, user_id: int):
+    obj = db.query(Token).filter(Token.refresh_token == refresh_token and Token.user_id == user_id).first()
+    return obj
+
+
 def delete_token(db: Session, user_id: int):
     obj = db.query(Token).filter(Token.user_id == user_id).first()
+    if obj:
+        db.delete(obj)
+        db.commit()
+        return obj
+
+
+def update_token(db: Session, refresh_token: str, user_id: int):
+    obj = db.query(Token).filter(Token.refresh_token == refresh_token and Token.user_id == user_id).first()
     if obj:
         db.delete(obj)
         db.commit()

@@ -1,3 +1,5 @@
+from datetime import datetime, timezone, timedelta
+
 import jwt
 
 from core.config import settings
@@ -12,5 +14,9 @@ def validate_token(token):
         raise e
 
 
-def encode_token(email):
-    return jwt.encode({'id': email}, settings.SECRET_KEY, algorithm='HS256')
+def create_token(email, is_refresh: bool):
+    exp = datetime.utcnow() + timedelta(hours=3)
+    if is_refresh:
+        exp = datetime.utcnow() + timedelta(days=1)
+
+    return jwt.encode({'email': email, "exp": exp}, settings.SECRET_KEY, algorithm='HS256')

@@ -16,4 +16,5 @@ class Token(database.Base):
 
     id = Column(Integer, primary_key=True, index=True)
     token = Column(Text)
+    refresh_token = Column(Text)
     user_id = Column(Integer, ForeignKey("users.id"))
