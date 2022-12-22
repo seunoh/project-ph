@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy.orm import Session
 
@@ -12,7 +12,7 @@ def get(db: Session, data_id: int, user_id: int) -> Optional[AccountBook]:
                                         and AccountBook.user_id == user_id).first()
 
 
-def get_list_by_user(db: Session, user_id: int) -> Optional[list[AccountBook]]:
+def get_list_by_user(db: Session, user_id: int) -> Optional[List[AccountBook]]:
     return db.query(AccountBook).filter(AccountBook.user_id == user_id).all()
 
 
