@@ -1,10 +1,11 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, func
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String,\
+    Text, func
 
 from app.db import database
 
 
 class User(database.Base):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(255), unique=True, index=True)
@@ -13,7 +14,7 @@ class User(database.Base):
 
 
 class Token(database.Base):
-    __tablename__ = 'tokens'
+    __tablename__ = "tokens"
 
     id = Column(Integer, primary_key=True, index=True)
     token = Column(Text)
