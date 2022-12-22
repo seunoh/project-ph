@@ -55,7 +55,8 @@ async def update(
     )
     if not db_obj:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="해당 내역을 찾을 수 없습니다."
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="해당 내역을 찾을 수 없습니다."
         )
     return {
         "id": db_obj.id,
@@ -115,12 +116,15 @@ async def read_all(
 
 
 @router.get("/{item_id}")
-async def read(item_id: int, db: Session = Depends(get_db)) -> Any:
+async def read(
+        item_id: int,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)) -> Any:
     """
     가계부에서 상세한 세부 내역을 볼 수 있습니다.
     :return:
     """
-    db_obj = crud_account_book.get(db=db, data_id=item_id)
+    db_obj = crud_account_book.get(db=db, data_id=item_id, user_id=current_user.id)
     if not db_obj:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="해당 내역을 찾을 수 없습니다."

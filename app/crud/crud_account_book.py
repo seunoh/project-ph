@@ -7,8 +7,9 @@ from app.models.account_book import AccountBook
 from app.schemas import AccountBookCreate, AccountBookUpdate
 
 
-def get(db: Session, data_id: int) -> Optional[AccountBook]:
-    return db.query(AccountBook).filter(AccountBook.id == data_id).first()
+def get(db: Session, data_id: int, user_id: int) -> Optional[AccountBook]:
+    return db.query(AccountBook).filter(AccountBook.id == data_id
+                                        and AccountBook.user_id == user_id).first()
 
 
 def get_list_by_user(db: Session, user_id: int) -> Optional[list[AccountBook]]:
