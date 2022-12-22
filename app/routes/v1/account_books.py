@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create(
+def create(
         payload: AccountBookCreate,
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user),
@@ -40,7 +40,7 @@ async def create(
 
 
 @router.put("/{item_id}")
-async def update(
+def update(
         item_id: int,
         payload: AccountBookUpdate,
         db: Session = Depends(get_db),
@@ -69,7 +69,7 @@ async def update(
 
 
 @router.delete("/{item_id}")
-async def delete(
+def delete(
         item_id: int,
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user),
@@ -89,7 +89,7 @@ async def delete(
 
 
 @router.get("/")
-async def read_all(
+def read_all(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ) -> Any:
@@ -116,7 +116,7 @@ async def read_all(
 
 
 @router.get("/{item_id}")
-async def read(
+def read(
         item_id: int,
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)) -> Any:
@@ -140,7 +140,7 @@ async def read(
 
 
 @router.post("/{item_id}/copy", status_code=status.HTTP_201_CREATED)
-async def copy(
+def copy(
         item_id: int,
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user),

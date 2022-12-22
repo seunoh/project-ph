@@ -14,5 +14,5 @@ app.include_router(short_url_router)
 
 
 @app.get("/")
-async def root() -> Any:
+def root() -> Any:
     return {"message": "Hello World"}

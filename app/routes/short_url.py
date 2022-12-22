@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 @router.post("/short", status_code=status.HTTP_201_CREATED)
-async def create(
+def create(
     payload: ShortUrlCreate, request: Request, db: Session = Depends(get_db)
 ) -> Any:
     """
@@ -40,7 +40,7 @@ async def create(
 
 
 @router.get("/{short_url}")
-async def short(
+def short(
         short_url: str,
         request: Request,
         db: Session = Depends(get_db)) -> Any:
